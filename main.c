@@ -34,7 +34,7 @@ void handle_exit(void) {
 void handle_sigint(int signum) { exit(0); }
 
 int main(int argc, char** argv) {
-  if (argc < 2 || argc > 2) {
+  if (argc != 2) {
     printf("Format is %s YYYY-mm-dd-H:M:S!\n", argv[0]);
     return 0;
   }
