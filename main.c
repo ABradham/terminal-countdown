@@ -33,6 +33,30 @@ void handle_exit(void) {
 
 void handle_sigint(int signum) { exit(0); }
 
+
+void fetch_time_from_file(const char* path, struct tm* res) {
+  FILE* f = fopen(path, "r");
+  if (f == NULL){
+    printf("Error opening file: %s\n", path);
+    exit(1);
+  }
+  
+  char* buf = NULL;
+  size_t cap = 0;
+  if(getline(&buf, &cap, f) == -1){ 
+   printf("Error reading line in file: %s\n", path);
+   fclose(f);
+   exit(1);
+  }
+
+  if (!strptime(buf, "%Y-%m-%d-%H:%M:%S", res)) {
+    printf("Error parsing the date string!\n");
+    fclose(f);
+    exit(1);
+  }
+  fclose(f);
+}
+
 int main(int argc, char** argv) {
   if (argc != 2) {
     printf("Format is %s YYYY-mm-dd-H:M:S!\n", argv[0]);
@@ -54,10 +78,7 @@ int main(int argc, char** argv) {
   struct timespec ts;
   struct tm target_tm;
   time_t target_cal_time;
-  if (!strptime(argv[1], "%Y-%m-%d-%H:%M:%S", &target_tm)) {
-    printf("Error parsing the date string!\n");
-    exit(0);
-  }
+  fetch_time_from_file(argv[1], &target_tm);
   target_cal_time = mktime(&target_tm);
   if (target_cal_time == (time_t)-1) {
     printf("Error converting time from date to calendar time!\n");
