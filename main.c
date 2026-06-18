@@ -49,7 +49,7 @@ void fetch_time_from_file(const char* path, struct tm* res) {
    exit(1);
   }
 
-  if (!strptime(buf, "%Y-%m-%d-%H:%M:%S", res)) {
+  if (!strptime(buf, "%Y-%m-%d %H:%M:%S", res)) {
     printf("Error parsing the date string!\n");
     fclose(f);
     exit(1);
@@ -59,7 +59,7 @@ void fetch_time_from_file(const char* path, struct tm* res) {
 
 int main(int argc, char** argv) {
   if (argc != 2) {
-    printf("Format is %s YYYY-mm-dd-H:M:S!\n", argv[0]);
+    printf("Format is %s <FILE_PATH>!\n", argv[0]);
     return 0;
   }
 
